@@ -1,0 +1,21 @@
+import tornado.ioloop
+import tornado.web
+
+from image_censor import censor
+
+class MainHandler(tornado.web.RequestHandler):
+    def post(self):    	
+    	dpath = self.get_argument('d')
+        
+    	total_image_number, porn_count, politician_count, terrorism_count, drug, alcohol, tobacco, military, disaster, porns, politicians, terrorisms, drugs, alcohols, tobaccos, militarys, disasters = censor(dpath)
+        obj = {'total_image_number':total_image_number,'porn_count':porn_count,'politician_count':politician_count,'terrorism_count':terrorism_count,'drug':drug,'alcohol':alcohol,'tobacco':tobacco,'military':military,'disaster':disaster,'porns':porns,'politicians':politicians,'terrorisms':terrorisms,'drugs':drugs,'alcohols':alcohols,'militarys':militarys,'disasters':disasters}
+    	self.write(obj)
+
+
+application = tornado.web.Application([
+    (r"/", MainHandler),
+])
+
+if __name__ == "__main__":
+    application.listen(8888)
+    tornado.ioloop.IOLoop.instance().start()
